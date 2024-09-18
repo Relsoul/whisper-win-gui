@@ -1,0 +1,5 @@
+{
+    "python.analysis.autoImportCompletions": true,
+    "commentTranslate.targetLanguage": "en",
+    "python.analysis.typeCheckingMode": "basic"
+}
