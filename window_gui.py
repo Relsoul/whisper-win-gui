@@ -243,7 +243,7 @@ def cb(in_data, frame_count, time_info, status):
         print(status)
     # print(in_data)
     global _array, Channels, sample_rate
-    # print(Channels, sample_rate)
+    # print('cb', Channels, sample_rate)
     # 将输入音频转换为6声道浮点数
     audio_array = np.frombuffer(
         in_data, dtype=np.float32).reshape(-1, Channels)
@@ -327,8 +327,11 @@ async def start_watch_win_system_audio():
     print(f"Default speakers: {default_speakers['name']}")
     shared_state.print_queue.put(
         f"Default speakers: {default_speakers['name']}")
+    global Channels, sample_rate
     Channels = default_speakers["maxInputChannels"]
     sample_rate = int(default_speakers["defaultSampleRate"])
+    print('sample_rate', sample_rate)
+    print('Channels', Channels)
     shared_state.print_queue.put(f"Channels: {Channels}")
     shared_state.print_queue.put(f"sample_rate: {sample_rate}")
     with p.open(format=pyaudio.paFloat32,
