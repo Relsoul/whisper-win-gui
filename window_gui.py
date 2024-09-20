@@ -174,6 +174,12 @@ async def test_put_ws(e):
     print('test_put_ws push data 2 queue done')
 
 
+async def exit_app(page):
+    print('exit_app')
+    page.window.close()
+    exit()
+
+
 async def main(page: ft.Page):
     page.add(ft.Text("点击下述按钮启动对应服务，注意：model服务需要先启动"))
     row = ft.Row([
@@ -199,8 +205,8 @@ async def main(page: ft.Page):
 
     outRow = ft.Row([
         ft.Column([
-            ft.Container(ft.Text("系统输出区"),
-                         bgcolor=ft.colors.AMBER_300, padding=10),
+            ft.Container(ft.Text("系统输出区", color=ft.colors.WHITE,),
+                         bgcolor=ft.colors.AMBER_300,  padding=10),
             outputArea
         ]),
         # ft.Column([
@@ -212,20 +218,26 @@ async def main(page: ft.Page):
 
     page.add(outRow)
 
+    # def on_window_event(e):
+    #     print('on_window_event', e)
+
+    # page.window.on_event = on_window_event
+
+    # async def on_close(e):
+    #     await exit_app(e)
+    #     shared_state.stop_event.set()
+    #     with shared_state.condition:
+    #         shared_state.condition.notify_all()
+    #     monitor_thread.join()
+
+    # page.on_close = on_close
+
     # 启动队列监视器线程
     monitor_thread = threading.Thread(
         target=queue_monitor, args=(page, outputArea))
     monitor_thread.start()
 
     # 确保在应用关闭时停止监视器线程
-
-    def on_close(e):
-        shared_state.stop_event.set()
-        with shared_state.condition:
-            shared_state.condition.notify_all()
-        monitor_thread.join()
-
-    page.on_close = on_close
 
 
 DURATION = 999999999
@@ -374,7 +386,7 @@ async def sub_title_window(page: ft.Page):
         ft.Row(
             [
                 ft.WindowDragArea(ft.Container(ft.Text(
-                    "点击此区域拖动"), bgcolor=ft.colors.AMBER_300, padding=10), expand=True),
+                    "点击此区域拖动", color=ft.colors.WHITE), bgcolor=ft.colors.AMBER_300, padding=10, ), expand=True),
                 ft.IconButton(ft.icons.CLOSE,
                               icon_color=ft.colors.WHITE,
                               on_click=lambda _: page.window.close())
@@ -418,4 +430,5 @@ if __name__ == "__main__":
     # 启动协程
     # asyncio.gather(start_main())
     asyncio.run(run_all_tasks())
-    print('runnn')
+    print('exit all window')
+    os._exit(0)

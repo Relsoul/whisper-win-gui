@@ -1,17 +1,10 @@
-import asyncio
 from queue import Queue
 from typing import Literal
-import websockets
-import json
 import numpy as np
 import io
-import whisper
 import soundfile as sf
-import tempfile
 import torch
 import os
-import sounddevice
-import threading
 from pydub import AudioSegment
 from scipy.signal import resample
 from scipy import signal
@@ -161,7 +154,7 @@ def load_model_by_pipe(device: Literal['cpu', 'cuda', 'cuda:0'], print_queue: Qu
     print("Loading model...")
     print_queue.put('Loading model...')
     local_model_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), '../wmodel/large')
+        os.path.dirname(os.path.abspath(__file__)), '../wmodel/')
     local_model_path = os.path.normpath(local_model_path)
 
     print('local_model_path', local_model_path, device)
@@ -189,23 +182,24 @@ def load_model_by_pipe(device: Literal['cpu', 'cuda', 'cuda:0'], print_queue: Qu
     print_queue.put('Model loaded')
 
 
-def load_model_by_whisper(device: Literal['cpu', 'cuda', 'cuda:0'], print_queue: Queue):
-    model_size = "medium"  # 选择合适的模型
-    print("Loading model...")
-    print_queue.put('Loading model...')
-    # current file path+../whisper_model/Belle-whisper-large-v3-zh-punct
-    local_model_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), '../whisper_model')
-    # normalize path
-    local_model_path = os.path.normpath(local_model_path)
-    print('local_model_path', local_model_path)
+# 待完善，目前使用transformers的pipeline方式
+# def load_model_by_whisper(device: Literal['cpu', 'cuda', 'cuda:0'], print_queue: Queue):
+    # model_size = "medium"  # 选择合适的模型
+    # print("Loading model...")
+    # print_queue.put('Loading model...')
+    # # current file path+../whisper_model/Belle-whisper-large-v3-zh-punct
+    # local_model_path = os.path.join(
+    #     os.path.dirname(os.path.abspath(__file__)), '../whisper_model')
+    # # normalize path
+    # local_model_path = os.path.normpath(local_model_path)
+    # print('local_model_path', local_model_path)
 
-    # model_size = os.path.basename(local_model_path)  # 假设文件夹名就是模型大小
-    model = whisper.load_model(name='large',
-                               download_root=local_model_path, device=device, in_memory=True)
-    print("Model loaded")
-    print_queue.put('Model loaded')
-    return model
+    # # model_size = os.path.basename(local_model_path)  # 假设文件夹名就是模型大小
+    # model = whisper.load_model(name='large',
+    #                            download_root=local_model_path, device=device, in_memory=True)
+    # print("Model loaded")
+    # print_queue.put('Model loaded')
+    # return model
 
 
 def start_model_server(print_queue: Queue, shared_audio_queue: Queue, shared_subtitle_queue: Queue,):

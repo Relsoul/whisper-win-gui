@@ -1,5 +1,8 @@
-.wmodel/large/*
+wmodel/large/*
 
 testcode
 
 __pycache__
+
+wmodel
+!wmodel/.keep
