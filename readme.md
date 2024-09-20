@@ -8,18 +8,16 @@
 
 
 #### 模型+网页+websocket
-[![model+网页+websocket]](./docs/webandws.mp4)
+https://github.com/user-attachments/assets/6748f490-06ed-480f-8d79-d397197e385e
 
-https://github.com/Relsoul/whisper-win-gui/raw/master/docs/webandws.mp4
 
 <video width="320" height="240" src="https://github.com/Relsoul/whisper-win-gui/raw/master/docs/webandws.mp4" controls>
  
 </video>
 
 #### 模型+桌面客户端
-[![模型+桌面客户端]](./docs/win_audio.mp4)
 
-https://github.com/Relsoul/whisper-win-gui/raw/master/docs/win_audio.mp4
+https://github.com/user-attachments/assets/e169c026-f8bc-41eb-bf4f-513365c87242
 
 <video width="320" height="240" src="https://github.com/Relsoul/whisper-win-gui/raw/master/docs/win_audio.mp4" controls>
   
