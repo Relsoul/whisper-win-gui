@@ -9,16 +9,14 @@
 
 #### 模型+网页+websocket
 [![model+网页+websocket]](./docs/webandws.mp4)
-<video width="320" height="240" controls>
-  <source src="./docs/webandws.mp4" type="video/mp4">
-  Your browser does not support the video tag.
+<video width="320" height="240" src="https://github.com/Relsoul/whisper-win-gui/raw/master/docs/webandws.mp4" controls>
+ 
 </video>
 
 #### 模型+桌面客户端
 [![模型+桌面客户端]](./docs/win_audio.mp4)
-<video width="320" height="240" controls>
-  <source src="./docs/win_audio.mp4" type="video/mp4">
-  Your browser does not support the video tag.
+<video width="320" height="240" src="https://github.com/Relsoul/whisper-win-gui/raw/master/docs/win_audio.mp4" controls>
+  
 </video>
 
 
