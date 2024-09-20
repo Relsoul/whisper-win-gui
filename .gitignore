@@ -4,7 +4,7 @@ testcode
 
 __pycache__
 
-
+*.zip
 
 wmodel
 !wmodel/.keep

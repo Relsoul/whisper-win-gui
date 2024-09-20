@@ -262,7 +262,9 @@ def cb(in_data, frame_count, time_info, status):
     # 确保输入数据格式和采样率一致后再进行处理
     # audio_array = transform_audio_data(audio_array, sample_rate)
     global _array
-    _array.append(audio_array.copy())
+    # 判断是否有音频数据
+    if len(audio_array) > 0:
+        _array.append(audio_array.copy())
 
     # _array.append(in_data)
     return (in_data, pyaudio.paContinue)

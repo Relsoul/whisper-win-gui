@@ -3,6 +3,27 @@
 
 ## 效果演示
 
+![image](./docs/screen.png)
+
+
+
+#### 模型+网页+websocket
+[![model+网页+websocket]](./docs/webandws.mp4)
+<video width="320" height="240" controls>
+  <source src="./docs/webandws.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+#### 模型+桌面客户端
+[![模型+桌面客户端]](./docs/win_audio.mp4)
+<video width="320" height="240" controls>
+  <source src="./docs/win_audio.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
+
+
 ## 安装
 
 python版本要求>3.11(其他版本未测试)
@@ -63,7 +84,7 @@ python window_gui.py
 
 ## 问题&roadmap
 
-- 由于使用线程做处理，可能某些情况下会导致音频队列处理不及时，会卡一下，可能后续版本迭代会解决
+- 由于使用线程做处理，可能某些情况下(没有音频播放和音频数据)会导致音频队列处理不及时，会卡一下，可能后续版本迭代会解决
 - 系统音频监听只支持windows
 - js脚本目前是获取页面的video标签，有需要可以自行更改，后续待优化整合进油猴
 ```
