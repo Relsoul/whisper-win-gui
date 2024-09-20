@@ -1,8 +1,10 @@
-wmodel/large/*
+wmodel/Belle-whisper-large-v3-zh/*
 
 testcode
 
 __pycache__
+
+
 
 wmodel
 !wmodel/.keep
