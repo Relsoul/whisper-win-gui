@@ -279,12 +279,16 @@ def cb(in_data, frame_count, time_info, status):
     return (in_data, pyaudio.paContinue)
 
 
+_prev_array = []
+
+
 def timer_func():
     print('分割系统音频 put队列')
-    global _array, sample_rate
+    global _array, sample_rate, _prev_array
     # audio_data = np.concatenate(_array)
     # audio_data = b''.join(_array)
     array_copy = deepcopy(_array)
+
     _array = []
     if len(array_copy) == 0:
         print('no audio data')
@@ -292,7 +296,20 @@ def timer_func():
         timer = threading.Timer(time_gap, timer_func)
         timer.start()
         return
-    audio_data = np.concatenate(array_copy)
+    _prevlen = len(_prev_array)
+    if _prevlen > 0:
+        # 拼接20% 可以保证音频的连续性
+        p_concat = np.concatenate(_prev_array[-int(_prevlen*0.2):])
+        # print('p_concat', p_concat)
+        array_copy_contact = np.concatenate(array_copy)
+        audio_data = np.vstack((p_concat, array_copy_contact))
+        # print('combined_array', combined_array)
+        # audio_data = np.concatenate(
+        #     [_prev_array[-int(_prevlen*0.2):], array_copy])
+    else:
+        audio_data = np.concatenate(array_copy)
+
+    _prev_array = array_copy
     shared_state.audio_queue.put({
         "data": audio_data,
         "samplerate": sample_rate,

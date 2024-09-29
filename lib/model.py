@@ -1,4 +1,5 @@
 from queue import Queue
+import re
 from typing import Literal
 import numpy as np
 import io
@@ -141,6 +142,10 @@ def process_audio(data, samplerate, print_queue: Queue, type: Literal['webm_data
     # print('results', results)
     # 提取字幕文本
     subtitle = result["text"]
+    # 过滤掉语气词 如 啊这种
+    if subtitle:
+        subtitle = re.sub(
+            r'啊|哦|嗯|哦哦|嗯嗯|哦哦哦|嗯嗯嗯|哦哦哦哦|嗯嗯嗯嗯|哦哦哦哦哦|嗯嗯嗯嗯嗯|哦哦哦哦哦哦|嗯嗯嗯嗯嗯嗯|哦哦哦哦哦哦哦|嗯嗯嗯嗯嗯嗯嗯|哦哦哦哦哦哦哦哦|嗯嗯嗯嗯嗯嗯嗯嗯', '', subtitle)
     print('subtitle', subtitle)
     print_queue.put(f'subtitle: ${subtitle}')
 
