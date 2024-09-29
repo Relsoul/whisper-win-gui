@@ -21,6 +21,7 @@ class SharedState:
         self.ws_print = Queue()
         self.print_queue = Queue()
         self.subtitle_queue = Queue()
+        self.subtitle_print_queue = Queue()
         self.audio_queue = Queue()
         self.ws_subtitle_queue = asyncio.Queue()
         self.condition = threading.Condition()
@@ -47,7 +48,12 @@ def format_message(message):
     return s
 
 
-def process_queues(outputArea: ft.Text):
+def save_message2file(message):
+    with open('message.txt', 'a', encoding='utf-8') as f:
+        f.write(message)
+
+
+def process_queues(outputArea: ft.Text, subtitleOutPutArea: ft.Text):
     with shared_state.condition:
         if not shared_state.ws_print.empty():
             message = shared_state.ws_print.get()
@@ -57,10 +63,12 @@ def process_queues(outputArea: ft.Text):
             message = shared_state.print_queue.get()
             outputArea.value += format_message(message)
             return True
-        # if not shared_state.subtitle_queue.empty():
-        #     message = shared_state.subtitle_queue.get()
-        #     outputArea.value += format_message(message)
-        #     return True
+        if not shared_state.subtitle_print_queue.empty():
+            message = shared_state.subtitle_print_queue.get()
+            fmsg = format_message(message)
+            save_message2file(fmsg)
+            subtitleOutPutArea.value = fmsg + subtitleOutPutArea.value
+            return True
     return False
 
 
@@ -68,6 +76,7 @@ async def process_subtitle_queue(outputArea: ft.Text):
     with shared_state.condition:
         if not shared_state.subtitle_queue.empty():
             message = shared_state.subtitle_queue.get()
+            shared_state.subtitle_print_queue.put(message)
             if global_button_lock.ws_button_lock:
                 await shared_state.ws_subtitle_queue.put(message)
             outputArea.value = format_message(message)
@@ -75,10 +84,10 @@ async def process_subtitle_queue(outputArea: ft.Text):
     return False
 
 
-def queue_monitor(page: ft.Page, outputArea: ft.Text):
+def queue_monitor(page: ft.Page, outputArea: ft.Text, subtitleOutPutArea: ft.Text):
     while not shared_state.stop_event.is_set():
         with shared_state.condition:
-            while not process_queues(outputArea):
+            while not process_queues(outputArea, subtitleOutPutArea):
                 if shared_state.condition.wait(timeout=0.1):
                     break
         page.update()
@@ -199,9 +208,9 @@ async def main(page: ft.Page):
 
     page.add(ft.Divider())
 
-    outputArea = ft.Text(value="", height=300, width=300)
+    outputArea = ft.Text(value="", height=300, width=500)
 
-    subtitleOutPutArea = ft.Text(value="", height=300, width=300)
+    subtitleOutPutArea = ft.Text(value="", height=300, width=500)
 
     outRow = ft.Row([
         ft.Column([
@@ -209,11 +218,11 @@ async def main(page: ft.Page):
                          bgcolor=ft.colors.AMBER_300,  padding=10),
             outputArea
         ]),
-        # ft.Column([
-        #     ft.Container(ft.Text("系统输出区"),
-        #                  bgcolor=ft.colors.AMBER_300, padding=10),
-        #     subtitleOutPutArea
-        # ])
+        ft.Column([
+            ft.Container(ft.Text("字幕输出区"),
+                         bgcolor=ft.colors.AMBER_300, padding=10),
+            subtitleOutPutArea,
+        ], scroll=ft.ScrollMode.ALWAYS)
     ])
 
     page.add(outRow)
@@ -234,7 +243,7 @@ async def main(page: ft.Page):
 
     # 启动队列监视器线程
     monitor_thread = threading.Thread(
-        target=queue_monitor, args=(page, outputArea))
+        target=queue_monitor, args=(page, outputArea, subtitleOutPutArea))
     monitor_thread.start()
 
     # 确保在应用关闭时停止监视器线程

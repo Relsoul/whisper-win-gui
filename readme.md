@@ -44,6 +44,8 @@ python版本要求>3.11(其他版本未测试)
 - [x] 实时语音识别结果websocket推送
 - [x] 系统音频监听(windows)
 - [x] 网页video websocket推送及字幕功能
+- [x] 字幕文件保存
+- [x] 字幕区滚动展示
 
 
 
